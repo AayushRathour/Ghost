@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GHOST - Deepfake Detection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --secondary-dark: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --text-light: #f8fafc;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        .hacker-text {
+            font-family: 'Montserrat', sans-serif;
+            text-shadow: 0 0 5px var(--accent-green);
+        }
+
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-dark);
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #00fff9, 2px 2px #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); }
+            10% { clip: rect(112px, 9999px, 76px, 0); }
+            20% { clip: rect(85px, 9999px, 77px, 0); }
+            30% { clip: rect(27px, 9999px, 97px, 0); }
+            40% { clip: rect(64px, 9999px, 98px, 0); }
+            50% { clip: rect(61px, 9999px, 85px, 0); }
+            60% { clip: rect(99px, 9999px, 114px, 0); }
+            70% { clip: rect(34px, 9999px, 115px, 0); }
+            80% { clip: rect(98px, 9999px, 129px, 0); }
+            90% { clip: rect(43px, 9999px, 96px, 0); }
+            100% { clip: rect(82px, 9999px, 64px, 0); }
+        }
+
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 119px, 0); }
+            10% { clip: rect(66px, 9999px, 72px, 0); }
+            20% { clip: rect(112px, 9999px, 59px, 0); }
+            30% { clip: rect(91px, 9999px, 29px, 0); }
+            40% { clip: rect(20px, 9999px, 28px, 0); }
+            50% { clip: rect(50px, 9999px, 69px, 0); }
+            60% { clip: rect(78px, 9999px, 40px, 0); }
+            70% { clip: rect(102px, 9999px, 68px, 0); }
+            80% { clip: rect(105px, 9999px, 84px, 0); }
+            90% { clip: rect(15px, 9999px, 100px, 0); }
+            100% { clip: rect(64px, 9999px, 44px, 0); }
+        }
+
+        .terminal {
+            background-color: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--accent-green);
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terminal::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 25px;
+            background: linear-gradient(90deg, #ff00c1, #9600ff, #4900ff, #00b8d4, #00ff9d);
+            background-size: 200% 200%;
+            animation: gradient 5s ease infinite;
+            border-radius: 5px 5px 0 0;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .code-line {
+            font-family: 'Courier New', monospace;
+            color: var(--accent-green);
+            line-height: 1.5;
+        }
+
+        .btn-hover-effect-1:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-hover-effect-2:hover {
+            transform: skewX(-10deg);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-hover-effect-3:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+
+        .wave {
+            position: relative;
+        }
+
+        .wave::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+            animation: wave 3s linear infinite;
+        }
+
+        @keyframes wave {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--accent-purple);
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: screen;
+            opacity: 0.7;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Analysis result animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* Video container */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            background-color: #0f172a;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+            border-top-color: #3b82f6;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Progress bar */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: #1e293b;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <!-- Cursor Trail -->
+    <div id="cursor-trail"></div>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-900/90 backdrop-blur-md fixed w-full z-50 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <a href="index.html" class="text-2xl font-bold hacker-text text-green-400">GHOST</a>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="index.html" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-gray-800/50">Home</a>
+                            <a href="index.html#features" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-gray-800/50">Features</a>
+                            <a href="index.html#tech" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-gray-800/50">Tech Stack</a>
+                            <a href="index.html#about" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-gray-800/50">About</a>
+                            <a href="index.html#demo" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-gray-800/50">Demo</a>
+                            <a href="index.html#contact" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-gray-800/50">Contact</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-4 flex items-center md:ml-6 space-x-4">
+                        <div class="relative">
+                            <button id="theme-toggle" class="bg-gray-800 text-gray-300 hover:text-white px-3 py-1 rounded-md text-sm font-medium transition-all duration-300 hover:bg-gray-700/50 flex items-center">
+                                <i class="fas fa-moon mr-1"></i> Dark
+                            </button>
+                        </div>
+                        <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md text-sm font-medium transition-all duration-300 btn-hover-effect-1">
+                            <i class="fas fa-user-plus mr-1"></i> Sign Up
+                        </a>
+                        <a href="#" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-1 rounded-md text-sm font-medium transition-all duration-300 btn-hover-effect-2">
+                            <i class="fas fa-sign-in-alt mr-1"></i> Login
+                        </a>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" class="bg-gray-900 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu, show/hide based on menu state. -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="index.html" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="index.html#features" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Features</a>
+                <a href="index.html#tech" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Tech Stack</a>
+                <a href="index.html#about" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="index.html#demo" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Demo</a>
+                <a href="index.html#contact" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-700">
+                <div class="flex items-center px-5 space-x-4">
+                    <button id="theme-toggle-mobile" class="bg-gray-800 text-gray-300 hover:text-white px-3 py-1 rounded-md text-sm font-medium transition-all duration-300 hover:bg-gray-700/50 flex items-center">
+                        <i class="fas fa-moon mr-1"></i> Dark
+                    </button>
+                    <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md text-sm font-medium transition-all duration-300">
+                        <i class="fas fa-user-plus mr-1"></i> Sign Up
+                    </a>
+                    <a href="#" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-1 rounded-md text-sm font-medium transition-all duration-300">
+                        <i class="fas fa-sign-in-alt mr-1"></i> Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <!-- Feature Header -->
+        <section class="mb-16 text-center">
+            <div class="terminal p-6 rounded-lg mb-8">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4 hacker-text">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">Deepfake Detection</span>
+                </h1>
+                <p class="text-lg text-gray-400 max-w-3xl mx-auto">
+                    Our advanced AI analyzes videos in real-time to detect manipulated or synthetic content with industry-leading accuracy.
+                </p>
+            </div>
+        </section>
+
+        <!-- Detection Interface -->
+        <section class="mb-20">
+            <div class="terminal p-6 rounded-lg">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Video Input Section -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-6">Upload or Record Video</h2>
+                        
+                        <div class="video-container mb-6" id="videoContainer">
+                            <video id="videoPreview" class="hidden" autoplay muted></video>
+                            <div class="absolute inset-0 flex items-center justify-center" id="videoPlaceholder">
+                                <div class="text-center">
+                                    <i class="fas fa-video text-4xl text-gray-600 mb-2"></i>
+                                    <p class="text-gray-500">Video will appear here</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                            <button id="recordBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 btn-hover-effect-1 flex-1 flex items-center justify-center">
+                                <i class="fas fa-video mr-2"></i> Record Live
+                            </button>
+                            <button id="uploadBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 btn-hover-effect-2 flex-1 flex items-center justify-center">
+                                <i class="fas fa-upload mr-2"></i> Upload Video
+                            </button>
+                            <input type="file" id="videoInput" accept="video/*" class="hidden">
+                        </div>
+                        
+                        <div class="bg-gray-800/50 p-4 rounded-lg mb-6 hidden" id="recordingControls">
+                            <div class="flex justify-center space-x-4">
+                                <button id="startRecording" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full">
+                                    <i class="fas fa-circle mr-1"></i> Start
+                                </button>
+                                <button id="stopRecording" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full" disabled>
+                                    <i class="fas fa-stop mr-1"></i> Stop
+                                </button>
+                                <button id="cancelRecording" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full">
+                                    <i class="fas fa-times mr-1"></i> Cancel
+                                </button>
+                            </div>
+                            <div class="mt-4 text-center text-gray-400 text-sm">
+                                Recording time: <span id="recordingTime">00:00</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Analysis Section -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-6">Analysis Results</h2>
+                        
+                        <div class="bg-gray-800/50 rounded-lg p-6 mb-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-semibold text-white">Detection Status</h3>
+                                <span class="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded" id="statusText">READY</span>
+                            </div>
+                            
+                            <div class="progress-container mb-6">
+                                <div class="progress-bar" id="progressBar"></div>
+                            </div>
+                            
+                            <div class="hidden" id="loadingIndicator">
+                                <div class="flex flex-col items-center justify-center py-8">
+                                    <div class="spinner mb-4"></div>
+                                    <p class="text-gray-400">Analyzing video content...</p>
+                                </div>
+                            </div>
+                            
+                            <div class="hidden" id="resultsContainer">
+                                <div class="grid grid-cols-2 gap-4 mb-6">
+                                    <div class="bg-gray-900/50 p-4 rounded-lg">
+                                        <p class="text-gray-400 text-sm mb-1">Deepfake Probability</p>
+                                        <p class="text-3xl font-bold" id="deepfakeScore">--%</p>
+                                    </div>
+                                    <div class="bg-gray-900/50 p-4 rounded-lg">
+                                        <p class="text-gray-400 text-sm mb-1">Confidence Level</p>
+                                        <p class="text-3xl font-bold" id="confidenceScore">--%</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <p class="text-gray-400 text-sm mb-2">Detection Details</p>
+                                    <div class="bg-gray-900/50 p-4 rounded-lg">
+                                        <p class="text-white" id="detectionDetails">No analysis performed yet.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <p class="text-gray-400 text-sm mb-2">Manipulation Indicators</p>
+                                    <div class="space-y-2" id="indicatorsList">
+                                        <!-- Indicators will be added here dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button id="analyzeBtn" class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg font-medium transition-all duration-300 btn-hover-effect-3 hidden">
+                            <i class="fas fa-search mr-2"></i> Analyze Video
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- How It Works -->
+        <section class="mb-20">
+            <div class="terminal p-6 rounded-lg">
+                <h2 class="text-3xl font-bold text-white mb-8 text-center">How Our Deepfake Detection Works</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gray-800/50 p-6 rounded-lg">
+                        <div class="flex justify-center mb-4">
+                            <div class="bg-blue-900/30 p-4 rounded-full">
+                                <i class="fas fa-brain text-3xl text-blue-400"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white text-center mb-3">Neural Network Analysis</h3>
+                        <p class="text-gray-400 text-center">
+                            Our AI examines facial micro-expressions, blinking patterns, and unnatural movements that are telltale signs of deepfakes.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-gray-800/50 p-6 rounded-lg">
+                        <div class="flex justify-center mb-4">
+                            <div class="bg-purple-900/30 p-4 rounded-full">
+                                <i class="fas fa-wave-square text-3xl text-purple-400"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white text-center mb-3">Spectral Analysis</h3>
+                        <p class="text-gray-400 text-center">
+                            We analyze the video's frequency spectrum for inconsistencies that indicate manipulation or generation artifacts.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-gray-800/50 p-6 rounded-lg">
+                        <div class="flex justify-center mb-4">
+                            <div class="bg-green-900/30 p-4 rounded-full">
+                                <i class="fas fa-shield-alt text-3xl text-green-400"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white text-center mb-3">Ensemble Verification</h3>
+                        <p class="text-gray-400 text-center">
+                            Multiple specialized models vote on authenticity, with our proprietary algorithm combining their insights.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Sample Videos -->
+        <section>
+            <div class="terminal p-6 rounded-lg">
+                <h2 class="text-3xl font-bold text-white mb-8 text-center">Try With Sample Videos</h2>
+                <p class="text-gray-400 text-center mb-8 max-w-3xl mx-auto">
+                    Test our detection system with these pre-selected examples of real and manipulated videos.
+                </p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-gray-800/50 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300">
+                        <div class="video-container">
+                            <video class="w-full" poster="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2487&auto=format&fit=crop" muted loop>
+                                <source src="#" type="video/mp4">
+                            </video>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-play text-white text-4xl opacity-70"></i>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold text-white mb-2">Real Person</h3>
+                            <p class="text-gray-400 text-sm mb-3">Authentic video of a real person speaking</p>
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white w-full py-2 rounded-md text-sm font-medium transition-all duration-300">
+                                Use This Sample
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-800/50 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300">
+                        <div class="video-container">
+                            <video class="w-full" poster="https://images.unsplash.com/photo-1554151228-14d9def656e4?q=80&w=2486&auto=format&fit=crop" muted loop>
+                                <source src="#" type="video/mp4">
+                            </video>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-play text-white text-4xl opacity-70"></i>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold text-white mb-2">Basic Deepfake</h3>
+                            <p class="text-gray-400 text-sm mb-3">Face-swapped video with visible artifacts</p>
+                            <button class="bg-purple-600 hover:bg-purple-700 text-white w-full py-2 rounded-md text-sm font-medium transition-all duration-300">
+                                Use This Sample
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-800/50 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-red-500/20 transition-all duration-300">
+                        <div class="video-container">
+                            <video class="w-full" poster="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=2370&auto=format&fit=crop" muted loop>
+                                <source src="#" type="video/mp4">
+                            </video>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-play text-white text-4xl opacity-70"></i>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold text-white mb-2">Advanced Deepfake</h3>
+                            <p class="text-gray-400 text-sm mb-3">Highly realistic synthetic media</p>
+                            <button class="bg-red-600 hover:bg-red-700 text-white w-full py-2 rounded-md text-sm font-medium transition-all duration-300">
+                                Use This Sample
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900/90 backdrop-blur-md border-t border-gray-800">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">GHOST</h3>
+                    <p class="text-gray-400 text-sm">
+                        Advanced AI-driven identity verification protecting against deepfakes and synthetic media.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white text-sm transition-all duration-300">Home</a></li>
+                        <li><a href="index.html#features" class="text-gray-400 hover:text-white text-sm transition-all duration-300">Features</a></li>
+                        <li><a href="index.html#tech" class="text-gray-400 hover:text-white text-sm transition-all duration-300">Technology</a></li>
+                        <li><a href="index.html#demo" class="text-gray-400 hover:text-white text-sm transition-all duration-300">Demo</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-all duration-300">Documentation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-all duration-300">API Reference</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-all duration-300">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-all duration-300">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-all duration-300">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-all duration-300">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-all duration-300">Security</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-all duration-300">Compliance</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm mb-4 md:mb-0">
+                    © 2023 GHOST Security. All rights reserved.
+                </p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-500 hover:text-white transition-all duration-300">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-white transition-all duration-300">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-white transition-all duration-300">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-white transition-all duration-300">
+                        <i class="fab fa-discord"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.querySelector('button[aria-controls="mobile-menu"]');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+        const body = document.body;
+
+        const themes = ['dark-mode', 'light-mode', 'default-mode'];
+        const themeNames = ['Dark', 'Light', 'Default'];
+        let currentThemeIndex = 0;
+
+        function setTheme(index) {
+            // Remove all theme classes
+            body.classList.remove(...themes);
+            
+            // Add the selected theme class
+            body.classList.add(themes[index]);
+            
+            // Update button text
+            const themeName = themeNames[index];
+            const iconClass = index === 0 ? 'fa-moon' : index === 1 ? 'fa-sun' : 'fa-adjust';
+            
+            if (themeToggle) {
+                themeToggle.innerHTML = `<i class="fas ${iconClass} mr-1"></i> ${themeName}`;
+            }
+            
+            if (themeToggleMobile) {
+                themeToggleMobile.innerHTML = `<i class="fas ${iconClass} mr-1"></i> ${themeName}`;
+            }
+            
+            // Update current theme index
+            currentThemeIndex = index;
+        }
+
+        function cycleTheme() {
+            const nextThemeIndex = (currentThemeIndex + 1) % themes.length;
+            setTheme(nextThemeIndex);
+        }
+
+        if (themeToggle) {
+            themeToggle.addEventListener('click', cycleTheme);
+        }
+
+        if (themeToggleMobile) {
+            themeToggleMobile.addEventListener('click', cycleTheme);
+        }
+
+        // Initialize theme
+        setTheme(0);
+
+        // Cursor trail effect
+        const cursorTrail = document.getElementById('cursor-trail');
+        let mouseX = 0, mouseY = 0;
+        let trailX = 0, trailY = 0;
+        const speed = 0.2;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateCursorTrail() {
+            const dx = mouseX - trailX;
+            const dy = mouseY - trailY;
+            
+            trailX += dx * speed;
+            trailY += dy * speed;
+            
+            cursorTrail.style.left = trailX + 'px';
+            cursorTrail.style.top = trailY + 'px';
+            
+            requestAnimationFrame(animateCursorTrail);
+        }
+
+        animateCursorTrail();
+
+        // Video handling
+        const videoInput = document.getElementById('videoInput');
+        const videoPreview = document.getElementById('videoPreview');
+        const videoPlaceholder = document.getElementById('videoPlaceholder');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const recordBtn = document.getElementById('recordBtn');
+        const recordingControls = document.getElementById('recordingControls');
+        const startRecording = document.getElementById('startRecording');
+        const stopRecording = document.getElementById('stopRecording');
+        const cancelRecording = document.getElementById('cancelRecording');
+        const recordingTime = document.getElementById('recordingTime');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const statusText = document.getElementById('statusText');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const progressBar = document.getElementById('progressBar');
+        const deepfakeScore = document.getElementById('deepfakeScore');
+        const confidenceScore = document.getElementById('confidenceScore');
+        const detectionDetails = document.getElementById('detectionDetails');
+        const indicatorsList = document.getElementById('indicatorsList');
+
+        let mediaRecorder;
+        let recordedChunks = [];
+        let recordingStartTime;
+        let recordingInterval;
+        let currentVideoBlob = null;
+
+        // Upload video handler
+        uploadBtn.addEventListener('click', () => {
+            videoInput.click();
+        });
+
+        videoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const videoURL = URL.createObjectURL(file);
+                currentVideoBlob = file;
+                
+                videoPreview.src = videoURL;
+                videoPreview.classList.remove('hidden');
+                videoPlaceholder.classList.add('hidden');
+                
+                analyzeBtn.classList.remove('hidden');
+                statusText.textContent = 'READY';
+                statusText.className = 'bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded';
+                
+                // Hide results if they were shown before
+                resultsContainer.classList.add('hidden');
+            }
+        });
+
+        // Record video handler
+        recordBtn.addEventListener('click', () => {
+            recordingControls.classList.remove('hidden');
+            recordBtn.disabled = true;
+            uploadBtn.disabled = true;
+        });
+
+        cancelRecording.addEventListener('click', () => {
+            recordingControls.classList.add('hidden');
+            recordBtn.disabled = false;
+            uploadBtn.disabled = false;
+            
+            // Stop any ongoing recording
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                clearInterval(recordingInterval);
+            }
+            
+            // Reset timer
+            recordingTime.textContent = '00:00';
+        });
+
+        startRecording.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                videoPreview.srcObject = stream;
+                videoPreview.classList.remove('hidden');
+                videoPlaceholder.classList.add('hidden');
+                
+                mediaRecorder = new MediaRecorder(stream);
+                recordedChunks = [];
+                
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) {
+                        recordedChunks.push(e.data);
+                    }
+                };
+                
+                mediaRecorder.onstop = () => {
+                    currentVideoBlob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const videoURL = URL.createObjectURL(currentVideoBlob);
+                    videoPreview.src = videoURL;
+                    videoPreview.srcObject = null;
+                    
+                    analyzeBtn.classList.remove('hidden');
+                    statusText.textContent = 'READY';
+                    statusText.className = 'bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded';
+                    
+                    // Reset timer
+                    recordingTime.textContent = '00:00';
+                    clearInterval(recordingInterval);
+                };
+                
+                mediaRecorder.start();
+                recordingStartTime = Date.now();
+                recordingInterval = setInterval(updateRecordingTime, 1000);
+                
+                startRecording.disabled = true;
+                stopRecording.disabled = false;
+            } catch (err) {
+                console.error('Error accessing media devices:', err);
+                alert('Could not access camera/microphone. Please check permissions.');
+            }
+        });
+
+        stopRecording.addEventListener('click', () => {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                clearInterval(recordingInterval);
+                
+                startRecording.disabled = false;
+                stopRecording.disabled = true;
+            }
+        });
+
+        function updateRecordingTime() {
+            const seconds = Math.floor((Date.now() - recordingStartTime) / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            
+            recordingTime.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        // Analyze video handler
+        analyzeBtn.addEventListener('click', () => {
+            if (!currentVideoBlob) return;
+            
+            // Show loading state
+            loadingIndicator.classList.remove('hidden');
+            resultsContainer.classList.add('hidden');
+            analyzeBtn.disabled = true;
+            statusText.textContent = 'PROCESSING';
+            statusText.className = 'bg-yellow-600 text-white text-xs px-2 py-1 rounded';
+            
+            // Simulate analysis progress
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress > 100) progress = 100;
+                progressBar.style.width = `${progress}%`;
+                
+                if (progress === 100) {
+                    clearInterval(progressInterval);
+                    setTimeout(showResults, 500);
+                }
+            }, 300);
+        });
+
+        function showResults() {
+            // Hide loading and show results
+            loadingIndicator.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            analyzeBtn.disabled = false;
+            statusText.textContent = 'COMPLETE';
+            statusText.className = 'bg-green-600 text-white text-xs px-2 py-1 rounded';
+            
+            // Generate random results for demo (in a real app, this would come from your API)
+            const isDeepfake = Math.random() > 0.7;
+            const fakeScore = Math.floor(Math.random() * 30) + (isDeepfake ? 70 : 0);
+            const confidence = Math.floor(Math.random() * 20) + 80;
+            
+            deepfakeScore.textContent = `${fakeScore}%`;
+            deepfakeScore.className = `text-3xl font-bold ${fakeScore > 50 ? 'text-red-500' : 'text-green-500'}`;
+            
+            confidenceScore.textContent = `${confidence}%`;
+            
+            if (fakeScore > 70) {
+                detectionDetails.textContent = "Our analysis detected strong indicators of synthetic manipulation in this video. Multiple neural networks identified inconsistencies in facial movements and texture patterns.";
+            } else if (fakeScore > 40) {
+                detectionDetails.textContent = "This video shows some signs of potential manipulation, but the evidence is inconclusive. We recommend additional verification methods.";
+            } else {
+                detectionDetails.textContent = "No significant signs of manipulation detected. This video appears to be authentic based on our analysis.";
+            }
+            
+            // Generate indicators
+            indicatorsList.innerHTML = '';
+            const indicators = [
+                { name: "Facial Micro-Expressions", value: Math.floor(Math.random() * 100), threshold: 30 },
+                { name: "Eye Blinking Patterns", value: Math.floor(Math.random() * 100), threshold: 25 },
+                { name: "Texture Inconsistencies", value: Math.floor(Math.random() * 100), threshold: 40 },
+                { name: "Audio-Visual Sync", value: Math.floor(Math.random() * 100), threshold: 20 },
+                { name: "Spectral Artifacts", value: Math.floor(Math.random() * 100), threshold: 35 }
+            ];
+            
+            indicators.forEach(indicator => {
+                const indicatorItem = document.createElement('div');
+                indicatorItem.className = 'bg-gray-900/50 p-3 rounded-lg fade-in';
+                
+                const indicatorHeader = document.createElement('div');
+                indicatorHeader.className = 'flex justify-between items-center mb-1';
+                
+                const indicatorName = document.createElement('span');
+                indicatorName.className = 'text-gray-300 text-sm';
+                indicatorName.textContent = indicator.name;
+                
+                const indicatorValue = document.createElement('span');
+                indicatorValue.className = `text-sm font-medium ${indicator.value > indicator.threshold ? 'text-red-400' : 'text-green-400'}`;
+                indicatorValue.textContent = `${indicator.value}%`;
+                
+                indicatorHeader.appendChild(indicatorName);
+                indicatorHeader.appendChild(indicatorValue);
+                
+                const progressContainer = document.createElement('div');
+                progressContainer.className = 'w-full bg-gray-800 rounded-full h-1.5';
+                
+                const progressBar = document.createElement('div');
+                progressBar.className = `h-1.5 rounded-full ${indicator.value > indicator.threshold ? 'bg-red-500' : 'bg-green-500'}`;
+                progressBar.style.width = `${indicator.value}%`;
+                
+                progressContainer.appendChild(progressBar);
+                indicatorItem.appendChild(indicatorHeader);
+                indicatorItem.appendChild(progressContainer);
+                
+                indicatorsList.appendChild(indicatorItem);
+            });
+        }
+
+        // Sample video buttons
+        document.querySelectorAll('.bg-gray-800/50 button').forEach(button => {
+            button.addEventListener('click', function() {
+                const card = this.closest('.bg-gray-800/50');
+                const title = card.querySelector('h3').textContent;
+                
+                // In a real app, you would load the actual sample video
+                videoPreview.classList.remove('hidden');
+                videoPlaceholder.classList.add('hidden');
+                videoPreview.poster = card.querySelector('video').poster;
+                
+                analyzeBtn.classList.remove('hidden');
+                statusText.textContent = 'READY';
+                statusText.className = 'bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded';
+                
+                // Hide results if they were shown before
+                resultsContainer.classList.add('hidden');
+                
+                // Set a mock blob for the sample
+                currentVideoBlob = new Blob([], { type: 'video/mp4' });
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>     
