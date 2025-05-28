@@ -235,11 +235,44 @@
             width: 0%;
             transition: width 0.3s ease;
         }
+        
+        /* Screen recording indicator */
+        .recording-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(239, 68, 68, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .recording-indicator::before {
+            content: "";
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 1.5s infinite;
+        }
     </style>
 </head>
 <body class="dark-mode">
     <!-- Cursor Trail -->
     <div id="cursor-trail"></div>
+    
+    <!-- Screen recording indicator (hidden by default) -->
+    <div id="recordingIndicator" class="recording-indicator hidden">
+        Recording Screen...
+    </div>
 
     <!-- Navigation -->
     <nav class="bg-gray-900/90 backdrop-blur-md fixed w-full z-50 border-b border-gray-800">
@@ -336,7 +369,7 @@
                     <!-- Video Input Section -->
                     <div>
                         <h2 class="text-2xl font-bold text-white mb-6">Upload or Record Video</h2>
-                        
+                                                
                         <div class="video-container mb-6" id="videoContainer">
                             <video id="videoPreview" class="hidden" autoplay muted></video>
                             <div class="absolute inset-0 flex items-center justify-center" id="videoPlaceholder">
@@ -346,17 +379,17 @@
                                 </div>
                             </div>
                         </div>
-                        
+                                                
                         <div class="flex flex-col sm:flex-row gap-4 mb-6">
                             <button id="recordBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 btn-hover-effect-1 flex-1 flex items-center justify-center">
-                                <i class="fas fa-video mr-2"></i> Record Live
+                                <i class="fas fa-desktop mr-2"></i> Record Screen
                             </button>
                             <button id="uploadBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 btn-hover-effect-2 flex-1 flex items-center justify-center">
                                 <i class="fas fa-upload mr-2"></i> Upload Video
                             </button>
                             <input type="file" id="videoInput" accept="video/*" class="hidden">
                         </div>
-                        
+                                                
                         <div class="bg-gray-800/50 p-4 rounded-lg mb-6 hidden" id="recordingControls">
                             <div class="flex justify-center space-x-4">
                                 <button id="startRecording" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full">
@@ -374,28 +407,28 @@
                             </div>
                         </div>
                     </div>
-                    
+                                        
                     <!-- Analysis Section -->
                     <div>
                         <h2 class="text-2xl font-bold text-white mb-6">Analysis Results</h2>
-                        
+                                                
                         <div class="bg-gray-800/50 rounded-lg p-6 mb-6">
                             <div class="flex justify-between items-center mb-4">
                                 <h3 class="text-lg font-semibold text-white">Detection Status</h3>
                                 <span class="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded" id="statusText">READY</span>
                             </div>
-                            
+                                                        
                             <div class="progress-container mb-6">
                                 <div class="progress-bar" id="progressBar"></div>
                             </div>
-                            
+                                                        
                             <div class="hidden" id="loadingIndicator">
                                 <div class="flex flex-col items-center justify-center py-8">
                                     <div class="spinner mb-4"></div>
                                     <p class="text-gray-400">Analyzing video content...</p>
                                 </div>
                             </div>
-                            
+                                                        
                             <div class="hidden" id="resultsContainer">
                                 <div class="grid grid-cols-2 gap-4 mb-6">
                                     <div class="bg-gray-900/50 p-4 rounded-lg">
@@ -407,14 +440,14 @@
                                         <p class="text-3xl font-bold" id="confidenceScore">--%</p>
                                     </div>
                                 </div>
-                                
+                                                                
                                 <div class="mb-6">
                                     <p class="text-gray-400 text-sm mb-2">Detection Details</p>
                                     <div class="bg-gray-900/50 p-4 rounded-lg">
                                         <p class="text-white" id="detectionDetails">No analysis performed yet.</p>
                                     </div>
                                 </div>
-                                
+                                                                
                                 <div class="mb-6">
                                     <p class="text-gray-400 text-sm mb-2">Manipulation Indicators</p>
                                     <div class="space-y-2" id="indicatorsList">
@@ -423,7 +456,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+                                                
                         <button id="analyzeBtn" class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg font-medium transition-all duration-300 btn-hover-effect-3 hidden">
                             <i class="fas fa-search mr-2"></i> Analyze Video
                         </button>
@@ -431,12 +464,12 @@
                 </div>
             </div>
         </section>
-        
+                
         <!-- How It Works -->
         <section class="mb-20">
             <div class="terminal p-6 rounded-lg">
                 <h2 class="text-3xl font-bold text-white mb-8 text-center">How Our Deepfake Detection Works</h2>
-                
+                                
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-gray-800/50 p-6 rounded-lg">
                         <div class="flex justify-center mb-4">
@@ -449,7 +482,7 @@
                             Our AI examines facial micro-expressions, blinking patterns, and unnatural movements that are telltale signs of deepfakes.
                         </p>
                     </div>
-                    
+                                        
                     <div class="bg-gray-800/50 p-6 rounded-lg">
                         <div class="flex justify-center mb-4">
                             <div class="bg-purple-900/30 p-4 rounded-full">
@@ -461,7 +494,7 @@
                             We analyze the video's frequency spectrum for inconsistencies that indicate manipulation or generation artifacts.
                         </p>
                     </div>
-                    
+                                        
                     <div class="bg-gray-800/50 p-6 rounded-lg">
                         <div class="flex justify-center mb-4">
                             <div class="bg-green-900/30 p-4 rounded-full">
@@ -476,7 +509,7 @@
                 </div>
             </div>
         </section>
-        
+                
         <!-- Sample Videos -->
         <section>
             <div class="terminal p-6 rounded-lg">
@@ -484,7 +517,7 @@
                 <p class="text-gray-400 text-center mb-8 max-w-3xl mx-auto">
                     Test our detection system with these pre-selected examples of real and manipulated videos.
                 </p>
-                
+                                
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div class="bg-gray-800/50 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300">
                         <div class="video-container">
@@ -503,7 +536,7 @@
                             </button>
                         </div>
                     </div>
-                    
+                                        
                     <div class="bg-gray-800/50 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300">
                         <div class="video-container">
                             <video class="w-full" poster="https://images.unsplash.com/photo-1554151228-14d9def656e4?q=80&w=2486&auto=format&fit=crop" muted loop>
@@ -521,7 +554,7 @@
                             </button>
                         </div>
                     </div>
-                    
+                                        
                     <div class="bg-gray-800/50 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-red-500/20 transition-all duration-300">
                         <div class="video-container">
                             <video class="w-full" poster="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=2370&auto=format&fit=crop" muted loop>
@@ -625,22 +658,22 @@
         function setTheme(index) {
             // Remove all theme classes
             body.classList.remove(...themes);
-            
+                        
             // Add the selected theme class
             body.classList.add(themes[index]);
-            
+                        
             // Update button text
             const themeName = themeNames[index];
             const iconClass = index === 0 ? 'fa-moon' : index === 1 ? 'fa-sun' : 'fa-adjust';
-            
+                        
             if (themeToggle) {
                 themeToggle.innerHTML = `<i class="fas ${iconClass} mr-1"></i> ${themeName}`;
             }
-            
+                        
             if (themeToggleMobile) {
                 themeToggleMobile.innerHTML = `<i class="fas ${iconClass} mr-1"></i> ${themeName}`;
             }
-            
+                        
             // Update current theme index
             currentThemeIndex = index;
         }
@@ -675,13 +708,13 @@
         function animateCursorTrail() {
             const dx = mouseX - trailX;
             const dy = mouseY - trailY;
-            
+                        
             trailX += dx * speed;
             trailY += dy * speed;
-            
+                        
             cursorTrail.style.left = trailX + 'px';
             cursorTrail.style.top = trailY + 'px';
-            
+                        
             requestAnimationFrame(animateCursorTrail);
         }
 
@@ -707,12 +740,14 @@
         const confidenceScore = document.getElementById('confidenceScore');
         const detectionDetails = document.getElementById('detectionDetails');
         const indicatorsList = document.getElementById('indicatorsList');
+        const recordingIndicator = document.getElementById('recordingIndicator');
 
         let mediaRecorder;
         let recordedChunks = [];
         let recordingStartTime;
         let recordingInterval;
         let currentVideoBlob = null;
+        let screenStream = null;
 
         // Upload video handler
         uploadBtn.addEventListener('click', () => {
@@ -724,21 +759,21 @@
             if (file) {
                 const videoURL = URL.createObjectURL(file);
                 currentVideoBlob = file;
-                
+                                
                 videoPreview.src = videoURL;
                 videoPreview.classList.remove('hidden');
                 videoPlaceholder.classList.add('hidden');
-                
+                                
                 analyzeBtn.classList.remove('hidden');
                 statusText.textContent = 'READY';
                 statusText.className = 'bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded';
-                
+                                
                 // Hide results if they were shown before
                 resultsContainer.classList.add('hidden');
             }
         });
 
-        // Record video handler
+        // Record screen handler
         recordBtn.addEventListener('click', () => {
             recordingControls.classList.remove('hidden');
             recordBtn.disabled = true;
@@ -749,57 +784,103 @@
             recordingControls.classList.add('hidden');
             recordBtn.disabled = false;
             uploadBtn.disabled = false;
-            
+                        
             // Stop any ongoing recording
             if (mediaRecorder && mediaRecorder.state === 'recording') {
                 mediaRecorder.stop();
                 clearInterval(recordingInterval);
             }
-            
+                        
             // Reset timer
             recordingTime.textContent = '00:00';
+            
+            // Hide recording indicator
+            recordingIndicator.classList.add('hidden');
+            
+            // Stop screen stream if active
+            if (screenStream) {
+                screenStream.getTracks().forEach(track => track.stop());
+                screenStream = null;
+            }
         });
 
         startRecording.addEventListener('click', async () => {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                videoPreview.srcObject = stream;
+                // Get screen capture stream
+                screenStream = await navigator.mediaDevices.getDisplayMedia({
+                    video: {
+                        mediaSource: 'screen',
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 },
+                        frameRate: { ideal: 30 }
+                    },
+                    audio: true
+                });
+                
+                // Show recording indicator
+                recordingIndicator.classList.remove('hidden');
+                
+                // Show screen capture in preview
+                videoPreview.srcObject = screenStream;
                 videoPreview.classList.remove('hidden');
                 videoPlaceholder.classList.add('hidden');
-                
-                mediaRecorder = new MediaRecorder(stream);
+                                
+                mediaRecorder = new MediaRecorder(screenStream);
                 recordedChunks = [];
-                
+                                
                 mediaRecorder.ondataavailable = (e) => {
                     if (e.data.size > 0) {
                         recordedChunks.push(e.data);
                     }
                 };
-                
+                                
                 mediaRecorder.onstop = () => {
                     currentVideoBlob = new Blob(recordedChunks, { type: 'video/webm' });
                     const videoURL = URL.createObjectURL(currentVideoBlob);
                     videoPreview.src = videoURL;
                     videoPreview.srcObject = null;
-                    
+                                        
                     analyzeBtn.classList.remove('hidden');
                     statusText.textContent = 'READY';
                     statusText.className = 'bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded';
-                    
+                                        
                     // Reset timer
                     recordingTime.textContent = '00:00';
                     clearInterval(recordingInterval);
+                    
+                    // Hide recording indicator
+                    recordingIndicator.classList.add('hidden');
+                    
+                    // Stop screen stream
+                    if (screenStream) {
+                        screenStream.getTracks().forEach(track => track.stop());
+                        screenStream = null;
+                    }
                 };
                 
+                // Handle when user stops sharing screen via browser controls
+                screenStream.getVideoTracks()[0].onended = () => {
+                    if (mediaRecorder && mediaRecorder.state === 'recording') {
+                        mediaRecorder.stop();
+                        clearInterval(recordingInterval);
+                    }
+                };
+                                
                 mediaRecorder.start();
                 recordingStartTime = Date.now();
                 recordingInterval = setInterval(updateRecordingTime, 1000);
-                
+                                
                 startRecording.disabled = true;
                 stopRecording.disabled = false;
             } catch (err) {
-                console.error('Error accessing media devices:', err);
-                alert('Could not access camera/microphone. Please check permissions.');
+                console.error('Error accessing screen:', err);
+                alert('Could not access screen recording. Please check permissions.');
+                
+                // Reset UI
+                recordingControls.classList.add('hidden');
+                recordBtn.disabled = false;
+                uploadBtn.disabled = false;
+                recordingIndicator.classList.add('hidden');
             }
         });
 
@@ -807,7 +888,7 @@
             if (mediaRecorder && mediaRecorder.state === 'recording') {
                 mediaRecorder.stop();
                 clearInterval(recordingInterval);
-                
+                                
                 startRecording.disabled = false;
                 stopRecording.disabled = true;
             }
@@ -817,28 +898,28 @@
             const seconds = Math.floor((Date.now() - recordingStartTime) / 1000);
             const minutes = Math.floor(seconds / 60);
             const remainingSeconds = seconds % 60;
-            
+                        
             recordingTime.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
         }
 
         // Analyze video handler
         analyzeBtn.addEventListener('click', () => {
             if (!currentVideoBlob) return;
-            
+                        
             // Show loading state
             loadingIndicator.classList.remove('hidden');
             resultsContainer.classList.add('hidden');
             analyzeBtn.disabled = true;
             statusText.textContent = 'PROCESSING';
             statusText.className = 'bg-yellow-600 text-white text-xs px-2 py-1 rounded';
-            
+                        
             // Simulate analysis progress
             let progress = 0;
             const progressInterval = setInterval(() => {
                 progress += Math.random() * 10;
                 if (progress > 100) progress = 100;
                 progressBar.style.width = `${progress}%`;
-                
+                                
                 if (progress === 100) {
                     clearInterval(progressInterval);
                     setTimeout(showResults, 500);
@@ -853,17 +934,17 @@
             analyzeBtn.disabled = false;
             statusText.textContent = 'COMPLETE';
             statusText.className = 'bg-green-600 text-white text-xs px-2 py-1 rounded';
-            
+                        
             // Generate random results for demo (in a real app, this would come from your API)
             const isDeepfake = Math.random() > 0.7;
             const fakeScore = Math.floor(Math.random() * 30) + (isDeepfake ? 70 : 0);
             const confidence = Math.floor(Math.random() * 20) + 80;
-            
+                        
             deepfakeScore.textContent = `${fakeScore}%`;
             deepfakeScore.className = `text-3xl font-bold ${fakeScore > 50 ? 'text-red-500' : 'text-green-500'}`;
-            
+                        
             confidenceScore.textContent = `${confidence}%`;
-            
+                        
             if (fakeScore > 70) {
                 detectionDetails.textContent = "Our analysis detected strong indicators of synthetic manipulation in this video. Multiple neural networks identified inconsistencies in facial movements and texture patterns.";
             } else if (fakeScore > 40) {
@@ -871,7 +952,7 @@
             } else {
                 detectionDetails.textContent = "No significant signs of manipulation detected. This video appears to be authentic based on our analysis.";
             }
-            
+                        
             // Generate indicators
             indicatorsList.innerHTML = '';
             const indicators = [
@@ -881,36 +962,36 @@
                 { name: "Audio-Visual Sync", value: Math.floor(Math.random() * 100), threshold: 20 },
                 { name: "Spectral Artifacts", value: Math.floor(Math.random() * 100), threshold: 35 }
             ];
-            
+                        
             indicators.forEach(indicator => {
                 const indicatorItem = document.createElement('div');
                 indicatorItem.className = 'bg-gray-900/50 p-3 rounded-lg fade-in';
-                
+                                
                 const indicatorHeader = document.createElement('div');
                 indicatorHeader.className = 'flex justify-between items-center mb-1';
-                
+                                
                 const indicatorName = document.createElement('span');
                 indicatorName.className = 'text-gray-300 text-sm';
                 indicatorName.textContent = indicator.name;
-                
+                                
                 const indicatorValue = document.createElement('span');
                 indicatorValue.className = `text-sm font-medium ${indicator.value > indicator.threshold ? 'text-red-400' : 'text-green-400'}`;
                 indicatorValue.textContent = `${indicator.value}%`;
-                
+                                
                 indicatorHeader.appendChild(indicatorName);
                 indicatorHeader.appendChild(indicatorValue);
-                
+                                
                 const progressContainer = document.createElement('div');
                 progressContainer.className = 'w-full bg-gray-800 rounded-full h-1.5';
-                
+                                
                 const progressBar = document.createElement('div');
                 progressBar.className = `h-1.5 rounded-full ${indicator.value > indicator.threshold ? 'bg-red-500' : 'bg-green-500'}`;
                 progressBar.style.width = `${indicator.value}%`;
-                
+                                
                 progressContainer.appendChild(progressBar);
                 indicatorItem.appendChild(indicatorHeader);
                 indicatorItem.appendChild(progressContainer);
-                
+                                
                 indicatorsList.appendChild(indicatorItem);
             });
         }
@@ -920,19 +1001,19 @@
             button.addEventListener('click', function() {
                 const card = this.closest('.bg-gray-800/50');
                 const title = card.querySelector('h3').textContent;
-                
+                                
                 // In a real app, you would load the actual sample video
                 videoPreview.classList.remove('hidden');
                 videoPlaceholder.classList.add('hidden');
                 videoPreview.poster = card.querySelector('video').poster;
-                
+                                
                 analyzeBtn.classList.remove('hidden');
                 statusText.textContent = 'READY';
                 statusText.className = 'bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded';
-                
+                                
                 // Hide results if they were shown before
                 resultsContainer.classList.add('hidden');
-                
+                                
                 // Set a mock blob for the sample
                 currentVideoBlob = new Blob([], { type: 'video/mp4' });
             });
@@ -942,16 +1023,16 @@
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                
+                                
                 const targetId = this.getAttribute('href');
                 const targetElement = document.querySelector(targetId);
-                
+                                
                 if (targetElement) {
                     window.scrollTo({
                         top: targetElement.offsetTop - 80,
                         behavior: 'smooth'
                     });
-                    
+                                        
                     // Close mobile menu if open
                     if (!mobileMenu.classList.contains('hidden')) {
                         mobileMenu.classList.add('hidden');
@@ -961,4 +1042,4 @@
         });
     </script>
 </body>
-</html>     
+</html>
