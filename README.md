@@ -42,7 +42,7 @@ Grad-CAM – Visual explainability of spoof detection
 **Secure Video Conferencing**
 **Law Enforcement & Surveillance**
 
-**✅ Benefits**
+## ✅ Benefits
 🛡 Real-Time Protection from AI-driven impersonation attacks
 💬 Voice-Based OTP makes spoofing harder than traditional methods
 💸 Reduces Financial Losses from scams and fraud
@@ -61,9 +61,9 @@ MIT Media Lab DetectFakes (2020–2025)
 NIST Deepfake Dataset (2019)
 
 ## 👨‍💻 Team Tecticians
-**Aayush Rathour** – AI & System Integration
-**Harshvardhan Thakur** – Operations & Research
-**Vanshika Verma** – UI/UX & External Affair
+- **Aayush Rathour** – AI & System Integration
+- **Harshvardhan Thakur** – Operations & Research
+- **Vanshika Verma** – UI/UX & External Affair
 
 
 ## 🔁 Workflow Architecture
