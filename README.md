@@ -1,6 +1,6 @@
-# 👻 GHOST – AI-Driven Identity Shield
+# 👻 GHOST – AI-Driven Deepfack Video and Cloned Voice Detection System
 
-**GHOST** is an advanced AI-based identity verification system that detects and prevents deepfake videos and voice clone scams in **real-time**. Developed as part of the **FutureHack 2.0 Hackathon**, this solution integrates **multimodal biometric checks**—face, voice, and behavior—to deliver robust fraud detection and digital trust.
+**GHOST** is an advanced AI-based identity verification system that detects and prevents deepfake videos and voice clone scams in **real-time**, this solution integrates **multimodal biometric checks**—face, voice, and behavior—to deliver robust fraud detection and digital trust.
 
 ## 🎯 Objective
 
@@ -47,7 +47,7 @@ To build a **real-time identity protection system** that:
 
 
 
-🔍 AI Models Used
+##🔍 AI Models Used ##
 XceptionNet – Real-time face forgery detection
 ECAPA-TDNN – Voice clone detection via audio embeddings
 Grad-CAM – Visual explainability of spoof detection
@@ -58,7 +58,7 @@ HR Tech & Remote Hiring
 Secure Video Conferencing
 Law Enforcement & Surveillance
 
-✅ Benefits
+**✅ Benefits**
 🛡 Real-Time Protection from AI-driven impersonation attacks
 💬 Voice-Based OTP makes spoofing harder than traditional methods
 💸 Reduces Financial Losses from scams and fraud
